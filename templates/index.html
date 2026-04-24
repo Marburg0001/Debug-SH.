@@ -637,6 +637,66 @@
 });
     DEBUGISH_I18N.zh.htmlLang = "zh-CN";
 
+    Object.assign(DEBUGISH_I18N.en.text, {
+      "Kategori": "Category",
+      "Güvenlik": "Security",
+      "Performans": "Performance",
+      "Teknik": "Technical",
+      "Kritik": "Critical",
+      "Orta": "Medium",
+      "Düşük": "Low",
+      "Başarılı": "Successful",
+      "Güçlü": "Strong",
+      "Geliştirilmeli": "Needs improvement",
+      "Var": "Present",
+      "Yok": "Missing",
+      "Başarılı Kontroller": "Passed Checks",
+      "Bozuk Linkler": "Broken Links",
+      "Sorunlar ve Çözüm Kodları": "Issues and Fix Codes",
+      "Genel Durum": "Overall Status",
+      "Skorlar": "Scores",
+      "Temel Veriler": "Basic Data",
+      "Doğrulama": "Verification",
+      "Title etiketi mevcut.": "Title tag is present.",
+      "Meta description mevcut.": "Meta description is present.",
+      "En az bir H1 etiketi mevcut.": "At least one H1 tag is present.",
+      "Viewport meta etiketi mevcut.": "Viewport meta tag is present.",
+      "Canonical etiketi mevcut.": "Canonical tag is present.",
+      "HTTPS kullanılıyor.": "HTTPS is enabled.",
+      "robots.txt bulundu.": "robots.txt found.",
+      "sitemap.xml bulundu.": "sitemap.xml found.",
+      "Sıkıştırma aktif.": "Compression is enabled.",
+      "Görsellerde alt metin eksikliği tespit edilmedi.": "No missing image alt text detected.",
+      "Kontrol edilen bağlantılarda bozuk link bulunmadı.": "No broken links found among checked links.",
+      "Title yok": "Missing title",
+      "SEO zayıf": "SEO is weak.",
+      "Meta description yok": "Missing meta description",
+      "Arama sonuçlarında tıklanma oranı düşebilir.": "Click-through rate in search results may decrease.",
+      "H1 yok": "Missing H1",
+      "Sayfa ana başlığı eksik.": "The main page heading is missing.",
+      "Viewport yok": "Missing viewport",
+      "Mobil uyumluluk zayıflar.": "Mobile compatibility may weaken.",
+      "Canonical yok": "Missing canonical",
+      "Kopya içerik sinyali oluşabilir.": "Duplicate content signals may appear.",
+      "HTTPS yok": "Missing HTTPS",
+      "Bağlantı güvenli değil.": "The connection is not secure.",
+      "Temel güvenlik korumaları zayıf kalır.": "Basic security protections remain weak.",
+      "robots.txt yok": "Missing robots.txt",
+      "Arama motoru tarama yönlendirmesi eksik olabilir.": "Search engine crawl guidance may be missing.",
+      "sitemap.xml yok": "Missing sitemap.xml",
+      "Arama motorlarının sayfaları keşfetmesi zorlaşabilir.": "Search engines may have difficulty discovering pages.",
+      "Sıkıştırma yok": "Compression is disabled",
+      "Sayfa daha yavaş yüklenebilir.": "The page may load more slowly.",
+      "Alt metni eksik görseller var": "Images with missing alt text found",
+      "Erişilebilirlik ve görsel SEO zayıflar.": "Accessibility and image SEO may weaken.",
+      "Bozuk linkler bulundu": "Broken links found",
+      "Kullanıcı deneyimi ve crawl kalitesi düşer.": "User experience and crawl quality may decrease.",
+      "Bozuk linkleri güncelle veya kaldır.": "Update or remove broken links.",
+      "Belirgin geçilen kontrol listelenmedi.": "No clear passed checks listed.",
+      "Belirgin kritik sorun tespit edilmedi.": "No clear critical issue detected.",
+      "Bozuk link tespit edilmedi.": "No broken links detected."
+    });
+
     function t(value) {
       const key = normalizeDebugishText(value);
       const lang = getDebugishLang();
@@ -649,14 +709,22 @@
       let out = t(value);
       const lang = getDebugishLang();
       out = out.replace(/Eksik alt metin sayısı:\s*(\d+)/g, (_, n) =>
+        lang === "tr" ? `Eksik alt metin sayısı: ${n}` :
         lang === "ru" ? `Количество изображений без alt-текста: ${n}` :
         lang === "zh" ? `缺少 alt 文本的图片数量：${n}` :
         `Missing alt text count: ${n}`
       );
       out = out.replace(/Bozuk link sayısı:\s*(\d+)/g, (_, n) =>
+        lang === "tr" ? `Bozuk link sayısı: ${n}` :
         lang === "ru" ? `Количество битых ссылок: ${n}` :
         lang === "zh" ? `损坏链接数量：${n}` :
         `Broken link count: ${n}`
+      );
+      out = out.replace(/^(.+) eksik$/g, (_, header) =>
+        lang === "tr" ? `${header} eksik` :
+        lang === "ru" ? `Отсутствует ${header}` :
+        lang === "zh" ? `缺少 ${header}` :
+        `Missing ${header}`
       );
       return out;
     }
@@ -703,89 +771,294 @@
       return normalizeInputUrl(raw);
     }
 
+    const REPORT_I18N = {
+      en: {
+        title: "DebugIsh Deep Analysis Report",
+        verification: "Verification",
+        successful: "Successful",
+        overallStatus: "Overall Status",
+        overallScore: "Overall Score",
+        scores: "Scores",
+        security: "Security",
+        performance: "Performance",
+        technical: "Technical",
+        basicData: "Basic Data",
+        h1Count: "H1 Count",
+        linkCount: "Link Count",
+        imageCount: "Image Count",
+        missingAlt: "Missing Alt Text",
+        pageSize: "Page Size",
+        issueCounts: "Issue Counts",
+        critical: "Critical",
+        medium: "Medium",
+        low: "Low",
+        securityHeaders: "Security Headers",
+        passedChecks: "Passed Checks",
+        noPassed: "No clear passed checks listed.",
+        brokenLinks: "Broken Links",
+        noBroken: "No broken links detected.",
+        issuesAndFixes: "Issues and Fix Codes",
+        noIssues: "No clear critical issue detected.",
+        category: "Category",
+        reason: "Reason",
+        detail: "Detail",
+        fixCode: "Fix Code",
+        none: "-"
+      },
+      tr: {
+        title: "DebugIsh Derin Analiz Raporu",
+        verification: "Doğrulama",
+        successful: "Başarılı",
+        overallStatus: "Genel Durum",
+        overallScore: "Genel Skor",
+        scores: "Skorlar",
+        security: "Güvenlik",
+        performance: "Performans",
+        technical: "Teknik",
+        basicData: "Temel Veriler",
+        h1Count: "H1 Sayısı",
+        linkCount: "Link Sayısı",
+        imageCount: "Görsel Sayısı",
+        missingAlt: "Eksik Alt Metin",
+        pageSize: "Sayfa Boyutu",
+        issueCounts: "Sorun Sayıları",
+        critical: "Kritik",
+        medium: "Orta",
+        low: "Düşük",
+        securityHeaders: "Güvenlik Headerları",
+        passedChecks: "Başarılı Kontroller",
+        noPassed: "Belirgin başarılı kontrol yok.",
+        brokenLinks: "Bozuk Linkler",
+        noBroken: "Bozuk link tespit edilmedi.",
+        issuesAndFixes: "Sorunlar ve Çözüm Kodları",
+        noIssues: "Belirgin kritik sorun tespit edilmedi.",
+        category: "Kategori",
+        reason: "Neden",
+        detail: "Detay",
+        fixCode: "Düzeltme Kodu",
+        none: "-"
+      },
+      ru: {
+        title: "Подробный отчет DebugIsh",
+        verification: "Подтверждение",
+        successful: "Успешно",
+        overallStatus: "Общий статус",
+        overallScore: "Общий балл",
+        scores: "Оценки",
+        security: "Безопасность",
+        performance: "Производительность",
+        technical: "Технический блок",
+        basicData: "Основные данные",
+        h1Count: "Количество H1",
+        linkCount: "Количество ссылок",
+        imageCount: "Количество изображений",
+        missingAlt: "Изображения без alt-текста",
+        pageSize: "Размер страницы",
+        issueCounts: "Количество проблем",
+        critical: "Критично",
+        medium: "Средне",
+        low: "Низко",
+        securityHeaders: "Заголовки безопасности",
+        passedChecks: "Успешные проверки",
+        noPassed: "Явные успешные проверки не перечислены.",
+        brokenLinks: "Битые ссылки",
+        noBroken: "Битые ссылки не обнаружены.",
+        issuesAndFixes: "Проблемы и код исправлений",
+        noIssues: "Явных критических проблем не обнаружено.",
+        category: "Категория",
+        reason: "Причина",
+        detail: "Детали",
+        fixCode: "Код исправления",
+        none: "-"
+      },
+      zh: {
+        title: "DebugIsh 深度分析报告",
+        verification: "验证",
+        successful: "成功",
+        overallStatus: "总体状态",
+        overallScore: "总评分",
+        scores: "评分",
+        security: "安全性",
+        performance: "性能",
+        technical: "技术",
+        basicData: "基础数据",
+        h1Count: "H1 数量",
+        linkCount: "链接数量",
+        imageCount: "图片数量",
+        missingAlt: "缺少 Alt 文本",
+        pageSize: "页面大小",
+        issueCounts: "问题统计",
+        critical: "严重",
+        medium: "中等",
+        low: "较低",
+        securityHeaders: "安全响应头",
+        passedChecks: "已通过检查",
+        noPassed: "未列出明显通过的检查。",
+        brokenLinks: "损坏链接",
+        noBroken: "未发现损坏链接。",
+        issuesAndFixes: "问题与修复代码",
+        noIssues: "未发现明显严重问题。",
+        category: "类别",
+        reason: "原因",
+        detail: "详情",
+        fixCode: "修复代码",
+        none: "-"
+      }
+    };
+
+    function reportPack() {
+      return REPORT_I18N[getDebugishLang()] || REPORT_I18N.en;
+    }
+
+    function translateReportValue(value) {
+      if (value === null || value === undefined || value === "") return reportPack().none;
+      return translateTemplateText(value);
+    }
+
+    function translateFixCode(code) {
+      const lang = getDebugishLang();
+      let out = String(code || "");
+      const replacements = {
+        en: [
+          ["<title>Başlık</title>", "<title>Page Title</title>"],
+          ['<meta name="description" content="Açıklama metni" />', '<meta name="description" content="Page description" />'],
+          ["<h1>Ana Başlık</h1>", "<h1>Main Heading</h1>"],
+          ['<link rel="canonical" href="https://site.com/sayfa" />', '<link rel="canonical" href="https://site.com/page" />'],
+          ["Sunucuda SSL sertifikası kur ve HTTPS yönlendirmesi ekle.", "Install an SSL certificate on the server and enable HTTPS redirects."],
+          ["# Sunucu yapılandırmasına Content-Security-Policy header ekle", "# Add the Content-Security-Policy header to your server configuration"],
+          ["# Sunucu yapılandırmasına Strict-Transport-Security header ekle", "# Add the Strict-Transport-Security header to your server configuration"],
+          ["# Sunucu yapılandırmasına X-Content-Type-Options header ekle", "# Add the X-Content-Type-Options header to your server configuration"],
+          ["# Sunucu yapılandırmasına X-Frame-Options header ekle", "# Add the X-Frame-Options header to your server configuration"],
+          ["# Sunucu yapılandırmasına Referrer-Policy header ekle", "# Add the Referrer-Policy header to your server configuration"],
+          ["# gzip veya brotli sıkıştırmasını aktif et", "# Enable gzip or Brotli compression"],
+          ['<img src="ornek.jpg" alt="Açıklayıcı metin" />', '<img src="example.jpg" alt="Descriptive text" />'],
+          ["Bozuk linkleri güncelle veya kaldır.", "Update or remove broken links."]
+        ],
+        tr: [],
+        ru: [
+          ["<title>Başlık</title>", "<title>Заголовок страницы</title>"],
+          ['<meta name="description" content="Açıklama metni" />', '<meta name="description" content="Описание страницы" />'],
+          ["<h1>Ana Başlık</h1>", "<h1>Главный заголовок</h1>"],
+          ['<link rel="canonical" href="https://site.com/sayfa" />', '<link rel="canonical" href="https://site.com/page" />'],
+          ["Sunucuda SSL sertifikası kur ve HTTPS yönlendirmesi ekle.", "Установите SSL-сертификат на сервере и включите перенаправление на HTTPS."],
+          ["# Sunucu yapılandırmasına Content-Security-Policy header ekle", "# Добавьте заголовок Content-Security-Policy в конфигурацию сервера"],
+          ["# Sunucu yapılandırmasına Strict-Transport-Security header ekle", "# Добавьте заголовок Strict-Transport-Security в конфигурацию сервера"],
+          ["# Sunucu yapılandırmasına X-Content-Type-Options header ekle", "# Добавьте заголовок X-Content-Type-Options в конфигурацию сервера"],
+          ["# Sunucu yapılandırmasına X-Frame-Options header ekle", "# Добавьте заголовок X-Frame-Options в конфигурацию сервера"],
+          ["# Sunucu yapılandırmasına Referrer-Policy header ekle", "# Добавьте заголовок Referrer-Policy в конфигурацию сервера"],
+          ["# gzip veya brotli sıkıştırmasını aktif et", "# Включите сжатие gzip или Brotli"],
+          ['<img src="ornek.jpg" alt="Açıklayıcı metin" />', '<img src="example.jpg" alt="Описательный текст" />'],
+          ["Bozuk linkleri güncelle veya kaldır.", "Обновите или удалите битые ссылки."]
+        ],
+        zh: [
+          ["<title>Başlık</title>", "<title>页面标题</title>"],
+          ['<meta name="description" content="Açıklama metni" />', '<meta name="description" content="页面描述" />'],
+          ["<h1>Ana Başlık</h1>", "<h1>主标题</h1>"],
+          ['<link rel="canonical" href="https://site.com/sayfa" />', '<link rel="canonical" href="https://site.com/page" />'],
+          ["Sunucuda SSL sertifikası kur ve HTTPS yönlendirmesi ekle.", "在服务器上安装 SSL 证书，并启用 HTTPS 重定向。"],
+          ["# Sunucu yapılandırmasına Content-Security-Policy header ekle", "# 在服务器配置中添加 Content-Security-Policy 响应头"],
+          ["# Sunucu yapılandırmasına Strict-Transport-Security header ekle", "# 在服务器配置中添加 Strict-Transport-Security 响应头"],
+          ["# Sunucu yapılandırmasına X-Content-Type-Options header ekle", "# 在服务器配置中添加 X-Content-Type-Options 响应头"],
+          ["# Sunucu yapılandırmasına X-Frame-Options header ekle", "# 在服务器配置中添加 X-Frame-Options 响应头"],
+          ["# Sunucu yapılandırmasına Referrer-Policy header ekle", "# 在服务器配置中添加 Referrer-Policy 响应头"],
+          ["# gzip veya brotli sıkıştırmasını aktif et", "# 启用 gzip 或 Brotli 压缩"],
+          ['<img src="ornek.jpg" alt="Açıklayıcı metin" />', '<img src="example.jpg" alt="描述性文本" />'],
+          ["Bozuk linkleri güncelle veya kaldır.", "更新或移除损坏链接。"]
+        ]
+      };
+      (replacements[lang] || replacements.en).forEach(([from, to]) => {
+        out = out.split(from).join(to);
+      });
+      return out;
+    }
+
     function downloadReport() {
       if (!latestReport) return;
 
       const data = latestReport;
-      const issueText = data.issues.map((issue, i) => `
-${i + 1}. [${translateTemplateText(issue.severity)}] ${translateTemplateText(issue.title)}
-${t("Kategori")}: ${translateTemplateText(issue.category)}
-${t("Neden:")} ${translateTemplateText(issue.why)}
-${t("Detay:")} ${issue.details ? translateTemplateText(issue.details) : '-'}
-${t("Düzeltme Kodları")}:
-${issue.fix_code}
+      const R = reportPack();
+
+      const issueText = (data.issues || []).map((issue, i) => `
+${i + 1}. [${translateReportValue(issue.severity)}] ${translateReportValue(issue.title)}
+${R.category}: ${translateReportValue(issue.category)}
+${R.reason}: ${translateReportValue(issue.why)}
+${R.detail}: ${issue.details ? translateReportValue(issue.details) : R.none}
+${R.fixCode}:
+${translateFixCode(issue.fix_code)}
       `.trim()).join("\n\n-----------------------------\n\n");
 
-      const passText = (data.passed_checks || []).map((item, i) => `${i + 1}. ${translateTemplateText(item)}`).join("\n");
+      const passText = (data.passed_checks || []).map((item, i) => `${i + 1}. ${translateReportValue(item)}`).join("\n");
       const brokenText = (data.broken_links || []).length
         ? data.broken_links.map((item, i) => `${i + 1}. ${item.url} -> ${item.status}`).join("\n")
-        : t("Bozuk link tespit edilmedi.");
+        : R.noBroken;
+
+      const securityHeadersText = Object.entries(data.security_headers || {})
+        .map(([key, value]) => `${key}: ${translateReportValue(value)}`)
+        .join("\n");
 
       const reportText = `
-${reportTitle()}
+${R.title}
 ===========================
 
 Domain: ${data.domain}
 URL: ${data.url}
-${t("Doğrulama")}: ${t("Başarılı")}
+${R.verification}: ${R.successful}
 Status Code: ${data.status_code}
 Response Time: ${data.response_time}s
-${t("Genel Durum")}: ${translateTemplateText(data.summary_status)}
-${t("Genel Skor")}: ${data.overall_score}/100
+${R.overallStatus}: ${translateReportValue(data.summary_status)}
+${R.overallScore}: ${data.overall_score}/100
 
-${t("Skorlar")}
+${R.scores}
 -------
 SEO: ${data.category_scores.seo}/100
-${t("Güvenlik")}: ${data.category_scores.security}/100
-${t("Performans")}: ${data.category_scores.performance}/100
-${t("Teknik")}: ${data.category_scores.technical}/100
+${R.security}: ${data.category_scores.security}/100
+${R.performance}: ${data.category_scores.performance}/100
+${R.technical}: ${data.category_scores.technical}/100
 
-${t("Temel Veriler")}
+${R.basicData}
 -------------
-Title: ${data.title}
-Meta Description: ${data.meta_description}
-H1 Count: ${data.h1_count}
-Link Count: ${data.link_count}
-Image Count: ${data.image_count}
-Missing Alt Text: ${data.images_missing_alt}
-Viewport: ${translateTemplateText(data.viewport)}
-Canonical: ${data.canonical}
-Robots.txt: ${translateTemplateText(data.robots)}
-Sitemap.xml: ${translateTemplateText(data.sitemap)}
-Compression: ${translateTemplateText(data.compression)}
-Page Size: ${data.page_size_kb} KB
+Title: ${translateReportValue(data.title)}
+Meta Description: ${translateReportValue(data.meta_description)}
+${R.h1Count}: ${data.h1_count}
+${R.linkCount}: ${data.link_count}
+${R.imageCount}: ${data.image_count}
+${R.missingAlt}: ${data.images_missing_alt}
+Viewport: ${translateReportValue(data.viewport)}
+Canonical: ${translateReportValue(data.canonical)}
+Robots.txt: ${translateReportValue(data.robots)}
+Sitemap.xml: ${translateReportValue(data.sitemap)}
+Compression: ${translateReportValue(data.compression)}
+${R.pageSize}: ${data.page_size_kb} KB
 
-${getDebugishLang()==="tr" ? "Sorun Sayıları" : getDebugishLang()==="ru" ? "Количество проблем" : getDebugishLang()==="zh" ? "问题统计" : "Issue Counts"}
+${R.issueCounts}
 ------------
-${t("Kritik")}: ${data.issue_counts.critical}
-${t("Orta")}: ${data.issue_counts.medium}
-${t("Düşük")}: ${data.issue_counts.low}
+${R.critical}: ${data.issue_counts.critical}
+${R.medium}: ${data.issue_counts.medium}
+${R.low}: ${data.issue_counts.low}
 
-Security Headers
+${R.securityHeaders}
 ----------------
-${Object.entries(data.security_headers)
-  .map(([key, value]) => `${key}: ${value}`)
-  .join("\n")}
+${securityHeadersText}
 
-${t("Başarılı Kontroller")}
+${R.passedChecks}
 -------------------
-${passText || t("Belirgin geçilen kontrol listelenmedi.")}
+${passText || R.noPassed}
 
-${t("Bozuk Linkler")}
+${R.brokenLinks}
 -------------
 ${brokenText}
 
-${t("Sorunlar ve Çözüm Kodları")}
+${R.issuesAndFixes}
 -------------------------
-${issueText || t("Belirgin kritik sorun tespit edilmedi.")}
+${issueText || R.noIssues}
 `;
 
-      const blob = new Blob([reportText], { type: "text/plain;charset=utf-8" });
+      const blob = new Blob([reportText.trimStart()], { type: "text/plain;charset=utf-8" });
       const blobUrl = window.URL.createObjectURL(blob);
 
       const a = document.createElement("a");
       a.href = blobUrl;
-      a.download = `debugish-report-${sanitizeFilename(data.domain)}.txt`;
+      a.download = `debugish-report-${getDebugishLang()}-${sanitizeFilename(data.domain)}.txt`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
