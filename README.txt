@@ -1,20 +1,10 @@
-DebugIsh language upgrade
+DebugIsh language/report fix
 
-Added:
-- Top-left language selector with mini flags
-- English, Turkish, Russian, and Simplified Chinese UI localization
-- LocalStorage language memory
-- Localized scan status, verification flow, result cards, issue cards, and downloadable TXT report labels
-- gunicorn added to requirements.txt for Render
+Render settings:
+Build Command: pip install -r requirements.txt
+Start Command: gunicorn app:app
 
 Important:
-- Keep logo.png and favicon.png inside the static/ folder:
-  static/logo.png
-  static/favicon.png
-
-Render:
-Build Command:
-pip install -r requirements.txt
-
-Start Command:
-gunicorn app:app
+- Keep index.html inside templates/
+- Keep style.css, logo.png and favicon.png inside static/
+- The downloaded TXT report now follows the selected language: EN / TR / RU / ZH.
