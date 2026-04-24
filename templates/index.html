@@ -16,10 +16,10 @@
     <div class="language-switcher">
       <span class="language-icon">🌐</span>
       <select id="languageSelect" aria-label="Language selector">
-        <option value="en">English</option>
-        <option value="tr">Türkçe</option>
-        <option value="ru">Русский</option>
-        <option value="zh">中文</option>
+        <option value="en">🇬🇧 English</option>
+        <option value="tr">🇹🇷 Türkçe</option>
+        <option value="ru">🇷🇺 Русский</option>
+        <option value="zh">🇨🇳 中文</option>
       </select>
     </div>
     <div class="logo">
@@ -286,6 +286,15 @@
       return String(value || "").replace(/\s+/g, " ").trim();
     }
 
+
+    function reportTitle() {
+      const lang = getDebugishLang();
+      if (lang === "tr") return "DebugIsh Derin Analiz Raporu";
+      if (lang === "ru") return "Подробный отчет DebugIsh";
+      if (lang === "zh") return "DebugIsh 深度分析报告";
+      return "DebugIsh Deep Analysis Report";
+    }
+
     function applyDebugishLanguage() {
       const lang = getDebugishLang();
       const pack = DEBUGISH_I18N[lang] || DEBUGISH_I18N.en;
@@ -333,8 +342,324 @@
       applyDebugishLanguage();
 
       const observer = new MutationObserver(() => applyDebugishLanguage());
-      observer.observe(document.body, { childList: true, subtree: true });
+      observer.observe(document.body, { childList: true, subtree: true, characterData: true });
     });
+
+
+    // Professional RU/ZH localization override + small flag labels.
+    Object.assign(DEBUGISH_I18N.ru.text, {
+      "Smart Website Scanner": "Умный сканер сайтов",
+      "Web Sitenizin Zayıf Noktalarını Bulun": "Найдите слабые места вашего сайта",
+      "DebugIsh, web sitelerini hız, yapı ve temel teknik sağlık açısından tarar. Artık önce sahipliği doğrular, sonra derin analiz yapar ve düzeltme kodlarını rapora koyar.": "DebugIsh проверяет сайты по скорости, структуре и базовому техническому состоянию. Сначала подтверждает владение доменом, затем запускает глубокий анализ и добавляет в отчет готовые рекомендации с кодом.",
+      "Kodu Oluştur": "Создать код",
+      "Taramayı Başlat": "Начать проверку",
+      "Taranıyor...": "Идет проверка...",
+      "Hazır. Önce domain gir, kodu oluştur, sitene ekle ve doğrula.": "Готово. Введите домен, создайте код, добавьте его на сайт и подтвердите владение.",
+      "1. Adım: Sahiplik Doğrulama": "Шаг 1: подтверждение владения",
+      "Meta Tag Yöntemi": "Метод meta-тега",
+      "Bu kodu sitenin <head> alanına ekle.": "Добавьте этот код в раздел <head> вашего сайта.",
+      "Meta Kodu Kopyala": "Скопировать meta-код",
+      "TXT Yöntemi": "Метод TXT-файла",
+      "debugish-verification.txt dosyası oluştur ve içine bu kodu yaz.": "Создайте файл debugish-verification.txt и вставьте в него этот код.",
+      "TXT Kodu Kopyala": "Скопировать TXT-код",
+      "Doğrulamayı Kontrol Et": "Проверить подтверждение",
+      "Henüz analiz yapılmadı": "Анализ еще не выполнен",
+      "Doğrulama tamamlandığında derin rapor burada görünecek.": "После подтверждения здесь появится подробный отчет.",
+      "Test Edilen Site": "Проверенные сайты",
+      "Kategori": "Категория",
+      "Hızlı Tarama": "Быстрая проверка",
+      "Analiz": "Анализ",
+      "Neleri Analiz Ediyoruz": "Что мы анализируем",
+      "Performans": "Производительность",
+      "Yanıt süresi, sıkıştırma ve sayfa ağırlığını ölçer.": "Измеряет время ответа, сжатие и размер страницы.",
+      "SEO Sinyalleri": "SEO-сигналы",
+      "Title, meta description, canonical, robots ve sitemap kontrol eder.": "Проверяет title, meta description, canonical, robots.txt и sitemap.xml.",
+      "Güvenlik": "Безопасность",
+      "Temel güvenlik headerlarını ve HTTPS durumunu inceler.": "Проверяет основные заголовки безопасности и статус HTTPS.",
+      "Derin Rapor": "Подробный отчет",
+      "Sorunları nedenleri ve düzeltme kodlarıyla birlikte verir.": "Показывает проблемы, причины и готовые примеры кода для исправления.",
+      "Neden DebugIsh": "Почему DebugIsh",
+      "Sahiplik Doğrulama": "Подтверждение владения",
+      "Analiz herkese açık değil, önce domain sahibi olduğunu kanıtlarsın.": "Глубокий анализ защищен: сначала нужно подтвердить владение доменом.",
+      "İndirilebilir Rapor": "Отчет для скачивания",
+      "Detaylı hata ve düzeltme raporu otomatik olarak .txt dosyası halinde iner.": "Подробный отчет с проблемами и исправлениями автоматически скачивается в формате .txt.",
+      "Gerçek Veri": "Реальные данные",
+      "Analizler doğrudan site response verisine dayanır.": "Проверка основана напрямую на ответах живого сайта.",
+      "Düzeltme Kodları": "Код исправлений",
+      "Sorunları sadece söylemez, uygulanabilir örnek kod da verir.": "Сервис не только показывает проблемы, но и дает применимые примеры кода.",
+      "Biz Kimiz": "О нас",
+      "DebugIsh, web sitelerini anlaşılır teknik sinyallerle analiz eden modern bir araçtır. Karmaşık raporlar yerine net sorunlar, doğrulanmış sahiplik ve uygulanabilir düzeltme önerileri sunar. Amaç, karmaşık raporlar yerine anlaşılır sinyaller, doğrulanmış sahiplik ve indirilebilir teknik çözüm özetleri sunmaktır.": "DebugIsh — современный инструмент для анализа сайтов через понятные технические сигналы. Вместо перегруженных отчетов он показывает конкретные проблемы, подтвержденное владение и практичные рекомендации по исправлению. Цель — давать понятные сигналы, подтвержденное владение и скачиваемые технические сводки.",
+      "URL gerekli": "Требуется URL",
+      "Lütfen geçerli bir site adresi gir.": "Введите корректный адрес сайта.",
+      "Doğrulama kodu oluşturuluyor...": "Создается код подтверждения...",
+      "Kod oluşturulamadı": "Не удалось создать код",
+      "Bilinmeyen hata": "Неизвестная ошибка",
+      "Beklenmeyen hata": "Непредвиденная ошибка",
+      "Kod oluşturulurken bir sorun oluştu.": "При создании кода возникла ошибка.",
+      "Kod hazır. Şimdi bunu sitene ekleyip doğrulamayı kontrol et.": "Код готов. Добавьте его на сайт и проверьте подтверждение.",
+      "Doğrulama Kodu Hazır": "Код подтверждения готов",
+      "Sıradaki iş: kodu siteye eklemek": "Следующий шаг: добавить код на сайт",
+      "Domain sahibi doğrulaması olmadan analiz başlamaz. Meta tag veya TXT kodunu sitene koy, sonra doğrula.": "Без подтверждения владения доменом анализ не начнется. Добавьте meta-тег или TXT-код на сайт, затем подтвердите.",
+      "Domain sahipliği kontrol ediliyor...": "Проверяется владение доменом...",
+      "Doğrulama başarısız": "Подтверждение не удалось",
+      "Kod bulunamadı. Eklemeyi kontrol et ve tekrar dene.": "Код не найден. Проверьте добавление и попробуйте снова.",
+      "Doğrulama Başarılı": "Подтверждение успешно",
+      "Yöntem": "Метод",
+      "Doğrulandı": "Подтверждено",
+      "Domain doğrulandı. Şimdi taramayı başlat, sistem sorunları ve çözüm kodlarını önüne koysun.": "Домен подтвержден. Запустите проверку, и система покажет проблемы вместе с кодом исправлений.",
+      "Doğrulama başarılı. Derin analiz başlatılabilir.": "Подтверждение успешно. Теперь можно запустить глубокий анализ.",
+      "Doğrulama gerekli": "Требуется подтверждение",
+      "Önce domain sahipliğini doğrula, sonra derin analizi başlat.": "Сначала подтвердите владение доменом, затем запустите глубокий анализ.",
+      "Tarama hazırlanıyor": "Подготовка проверки",
+      "Lütfen bekle. Sistem siteyi katman katman inceliyor.": "Подождите. Система проверяет сайт по слоям.",
+      "Tarama başlatılıyor...": "Проверка запускается...",
+      "Yanıt süresi ve erişim kontrol ediliyor...": "Проверяется время ответа и доступность...",
+      "SEO ve yapısal sinyaller taranıyor...": "Проверяются SEO и структурные сигналы...",
+      "Güvenlik başlıkları analiz ediliyor...": "Анализируются заголовки безопасности...",
+      "Linkler, medya ve teknik hatalar kontrol ediliyor...": "Проверяются ссылки, медиа и технические ошибки...",
+      "Tarama tamamlanamadı.": "Проверку не удалось завершить.",
+      "Tarama başarısız": "Проверка не удалась",
+      "Tarama tamamlandı. Detaylı rapor indiriliyor.": "Проверка завершена. Подробный отчет скачивается.",
+      "Bir hata oluştu.": "Произошла ошибка.",
+      "Tarama sırasında bir sorun oluştu.": "Во время проверки возникла ошибка.",
+      "Analiz Tamamlandı": "Анализ завершен",
+      "Genel Skor": "Общий балл",
+      "Sorun Sayısı": "Количество проблем",
+      "Response Time": "Время ответа",
+      "Teknik": "Технический блок",
+      "Kritik": "Критично",
+      "Orta": "Средне",
+      "Düşük": "Низко",
+      "Bozuk Link": "Битые ссылки",
+      "Tarama yapıldı. Hatalar, nedenleri ve düzeltme kodları .txt rapor olarak otomatik indirildi.": "Проверка выполнена. Проблемы, причины и код исправлений автоматически скачаны в .txt-отчете.",
+      "Raporu Tekrar İndir": "Скачать отчет еще раз",
+      "Geçilen Kontroller": "Успешные проверки",
+      "Belirgin geçilen kontrol listelenmedi.": "Явные успешные проверки не перечислены.",
+      "Tespit Edilen Sorunlar ve Çözüm Kodları": "Найденные проблемы и код исправлений",
+      "Belirgin sorun yok": "Явных проблем нет",
+      "Sistem bu taramada kritik bir sorun tespit etmedi.": "Система не обнаружила критических проблем в этой проверке.",
+      "Neden:": "Причина:",
+      "Detay:": "Детали:",
+      "Önerilen Düzeltme": "Рекомендуемое исправление",
+      "Belirgin kritik sorun tespit edilmedi.": "Явных критических проблем не обнаружено.",
+      "Bozuk link tespit edilmedi.": "Битые ссылки не обнаружены.",
+      "Başarılı": "Успешно",
+      "Güçlü": "Сильный",
+      "Geliştirilmeli": "Требует улучшения",
+      "Var": "Есть",
+      "Yok": "Нет",
+      "Başarılı Kontroller": "Успешные проверки",
+      "Bozuk Linkler": "Битые ссылки",
+      "Sorunlar ve Çözüm Kodları": "Проблемы и код исправлений",
+      "Genel Durum": "Общий статус",
+      "Skorlar": "Оценки",
+      "Temel Veriler": "Основные данные",
+      "Doğrulama": "Подтверждение",
+      "Title etiketi mevcut.": "Тег title найден.",
+      "Meta description mevcut.": "Meta description найден.",
+      "En az bir H1 etiketi mevcut.": "Найден как минимум один тег H1.",
+      "Viewport meta etiketi mevcut.": "Meta viewport найден.",
+      "Canonical etiketi mevcut.": "Canonical-тег найден.",
+      "HTTPS kullanılıyor.": "HTTPS используется.",
+      "robots.txt bulundu.": "robots.txt найден.",
+      "sitemap.xml bulundu.": "sitemap.xml найден.",
+      "Sıkıştırma aktif.": "Сжатие включено.",
+      "Görsellerde alt metin eksikliği tespit edilmedi.": "Отсутствующие alt-тексты у изображений не обнаружены.",
+      "Kontrol edilen bağlantılarda bozuk link bulunmadı.": "Среди проверенных ссылок битые ссылки не найдены.",
+      "Title yok": "Отсутствует title",
+      "SEO zayıf": "SEO ослаблено.",
+      "Meta description yok": "Отсутствует meta description",
+      "Arama sonuçlarında tıklanma oranı düşebilir.": "Кликабельность в поисковой выдаче может снизиться.",
+      "H1 yok": "Отсутствует H1",
+      "Sayfa ana başlığı eksik.": "На странице отсутствует главный заголовок.",
+      "Viewport yok": "Отсутствует viewport",
+      "Mobil uyumluluk zayıflar.": "Мобильная адаптация ухудшается.",
+      "Canonical yok": "Отсутствует canonical",
+      "Kopya içerik sinyali oluşabilir.": "Может появиться сигнал дублирующегося контента.",
+      "HTTPS yok": "Отсутствует HTTPS",
+      "Bağlantı güvenli değil.": "Соединение небезопасно.",
+      "Temel güvenlik korumaları zayıf kalır.": "Базовая защита безопасности остается слабой.",
+      "robots.txt yok": "Отсутствует robots.txt",
+      "Arama motoru tarama yönlendirmesi eksik olabilir.": "Может отсутствовать управление обходом для поисковых систем.",
+      "sitemap.xml yok": "Отсутствует sitemap.xml",
+      "Arama motorlarının sayfaları keşfetmesi zorlaşabilir.": "Поисковым системам может быть сложнее находить страницы.",
+      "Sıkıştırma yok": "Сжатие отключено",
+      "Sayfa daha yavaş yüklenebilir.": "Страница может загружаться медленнее.",
+      "Alt metni eksik görseller var": "Есть изображения без alt-текста",
+      "Erişilebilirlik ve görsel SEO zayıflar.": "Доступность и SEO изображений ухудшаются.",
+      "Bozuk linkler bulundu": "Найдены битые ссылки",
+      "Kullanıcı deneyimi ve crawl kalitesi düşer.": "Пользовательский опыт и качество обхода ухудшается.",
+      "Bozuk linkleri güncelle veya kaldır.": "Обновите или удалите битые ссылки."
+});
+    Object.assign(DEBUGISH_I18N.zh.text, {
+      "Smart Website Scanner": "智能网站扫描器",
+      "Web Sitenizin Zayıf Noktalarını Bulun": "找出你的网站薄弱点",
+      "DebugIsh, web sitelerini hız, yapı ve temel teknik sağlık açısından tarar. Artık önce sahipliği doğrular, sonra derin analiz yapar ve düzeltme kodlarını rapora koyar.": "DebugIsh 会从速度、结构和基础技术健康度方面扫描网站。它会先验证域名所有权，然后进行深度分析，并把可执行的修复代码加入报告。",
+      "Kodu Oluştur": "生成代码",
+      "Taramayı Başlat": "开始扫描",
+      "Taranıyor...": "扫描中...",
+      "Hazır. Önce domain gir, kodu oluştur, sitene ekle ve doğrula.": "准备就绪。请输入域名，生成代码，将其添加到你的网站并完成验证。",
+      "1. Adım: Sahiplik Doğrulama": "第 1 步：所有权验证",
+      "Meta Tag Yöntemi": "Meta 标签方式",
+      "Bu kodu sitenin <head> alanına ekle.": "将这段代码添加到网站的 <head> 区域。",
+      "Meta Kodu Kopyala": "复制 Meta 代码",
+      "TXT Yöntemi": "TXT 文件方式",
+      "debugish-verification.txt dosyası oluştur ve içine bu kodu yaz.": "创建 debugish-verification.txt 文件，并将这段代码写入其中。",
+      "TXT Kodu Kopyala": "复制 TXT 代码",
+      "Doğrulamayı Kontrol Et": "检查验证",
+      "Henüz analiz yapılmadı": "尚未进行分析",
+      "Doğrulama tamamlandığında derin rapor burada görünecek.": "验证完成后，深度报告会显示在这里。",
+      "Test Edilen Site": "已测试网站",
+      "Kategori": "类别",
+      "Hızlı Tarama": "快速扫描",
+      "Analiz": "分析",
+      "Neleri Analiz Ediyoruz": "我们分析什么",
+      "Performans": "性能",
+      "Yanıt süresi, sıkıştırma ve sayfa ağırlığını ölçer.": "测量响应时间、压缩状态和页面体积。",
+      "SEO Sinyalleri": "SEO 信号",
+      "Title, meta description, canonical, robots ve sitemap kontrol eder.": "检查 title、meta description、canonical、robots.txt 和 sitemap.xml。",
+      "Güvenlik": "安全性",
+      "Temel güvenlik headerlarını ve HTTPS durumunu inceler.": "检查基础安全响应头和 HTTPS 状态。",
+      "Derin Rapor": "深度报告",
+      "Sorunları nedenleri ve düzeltme kodlarıyla birlikte verir.": "展示问题、原因以及可直接参考的修复代码。",
+      "Neden DebugIsh": "为什么选择 DebugIsh",
+      "Sahiplik Doğrulama": "所有权验证",
+      "Analiz herkese açık değil, önce domain sahibi olduğunu kanıtlarsın.": "深度分析受到保护，必须先证明你拥有该域名。",
+      "İndirilebilir Rapor": "可下载报告",
+      "Detaylı hata ve düzeltme raporu otomatik olarak .txt dosyası halinde iner.": "详细的问题与修复报告会自动以 .txt 文件下载。",
+      "Gerçek Veri": "真实数据",
+      "Analizler doğrudan site response verisine dayanır.": "分析直接基于网站的实时响应数据。",
+      "Düzeltme Kodları": "修复代码",
+      "Sorunları sadece söylemez, uygulanabilir örnek kod da verir.": "它不只是指出问题，还会提供可执行的示例代码。",
+      "Biz Kimiz": "关于我们",
+      "DebugIsh, web sitelerini anlaşılır teknik sinyallerle analiz eden modern bir araçtır. Karmaşık raporlar yerine net sorunlar, doğrulanmış sahiplik ve uygulanabilir düzeltme önerileri sunar. Amaç, karmaşık raporlar yerine anlaşılır sinyaller, doğrulanmış sahiplik ve indirilebilir teknik çözüm özetleri sunmaktır.": "DebugIsh 是一款通过清晰技术信号分析网站的现代工具。它不输出混乱复杂的报告，而是提供明确的问题、已验证的所有权和实用的修复建议。目标是提供易懂的技术信号、所有权验证以及可下载的技术解决方案摘要。",
+      "URL gerekli": "需要 URL",
+      "Lütfen geçerli bir site adresi gir.": "请输入有效的网站地址。",
+      "Doğrulama kodu oluşturuluyor...": "正在生成验证代码...",
+      "Kod oluşturulamadı": "无法生成代码",
+      "Bilinmeyen hata": "未知错误",
+      "Beklenmeyen hata": "意外错误",
+      "Kod oluşturulurken bir sorun oluştu.": "生成代码时出现问题。",
+      "Kod hazır. Şimdi bunu sitene ekleyip doğrulamayı kontrol et.": "代码已生成。请将其添加到网站，然后检查验证。",
+      "Doğrulama Kodu Hazır": "验证代码已生成",
+      "Sıradaki iş: kodu siteye eklemek": "下一步：将代码添加到网站",
+      "Domain sahibi doğrulaması olmadan analiz başlamaz. Meta tag veya TXT kodunu sitene koy, sonra doğrula.": "未完成域名所有权验证前无法开始分析。请将 meta 标签或 TXT 代码添加到网站，然后验证。",
+      "Domain sahipliği kontrol ediliyor...": "正在检查域名所有权...",
+      "Doğrulama başarısız": "验证失败",
+      "Kod bulunamadı. Eklemeyi kontrol et ve tekrar dene.": "未找到验证代码。请检查添加位置后重试。",
+      "Doğrulama Başarılı": "验证成功",
+      "Yöntem": "方式",
+      "Doğrulandı": "已验证",
+      "Domain doğrulandı. Şimdi taramayı başlat, sistem sorunları ve çözüm kodlarını önüne koysun.": "域名已验证。现在开始扫描，系统会展示问题和修复代码。",
+      "Doğrulama başarılı. Derin analiz başlatılabilir.": "验证成功。现在可以开始深度分析。",
+      "Doğrulama gerekli": "需要验证",
+      "Önce domain sahipliğini doğrula, sonra derin analizi başlat.": "请先验证域名所有权，然后再开始深度分析。",
+      "Tarama hazırlanıyor": "正在准备扫描",
+      "Lütfen bekle. Sistem siteyi katman katman inceliyor.": "请稍候。系统正在逐层检查网站。",
+      "Tarama başlatılıyor...": "正在启动扫描...",
+      "Yanıt süresi ve erişim kontrol ediliyor...": "正在检查响应时间和可访问性...",
+      "SEO ve yapısal sinyaller taranıyor...": "正在扫描 SEO 与结构信号...",
+      "Güvenlik başlıkları analiz ediliyor...": "正在分析安全响应头...",
+      "Linkler, medya ve teknik hatalar kontrol ediliyor...": "正在检查链接、媒体和技术问题...",
+      "Tarama tamamlanamadı.": "扫描未能完成。",
+      "Tarama başarısız": "扫描失败",
+      "Tarama tamamlandı. Detaylı rapor indiriliyor.": "扫描完成。正在下载详细报告。",
+      "Bir hata oluştu.": "发生错误。",
+      "Tarama sırasında bir sorun oluştu.": "扫描过程中出现问题。",
+      "Analiz Tamamlandı": "分析完成",
+      "Genel Skor": "总评分",
+      "Sorun Sayısı": "问题数量",
+      "Response Time": "响应时间",
+      "Teknik": "技术",
+      "Kritik": "严重",
+      "Orta": "中等",
+      "Düşük": "较低",
+      "Bozuk Link": "损坏链接",
+      "Tarama yapıldı. Hatalar, nedenleri ve düzeltme kodları .txt rapor olarak otomatik indirildi.": "扫描已完成。问题、原因和修复代码已自动下载为 .txt 报告。",
+      "Raporu Tekrar İndir": "重新下载报告",
+      "Geçilen Kontroller": "已通过检查",
+      "Belirgin geçilen kontrol listelenmedi.": "未列出明显通过的检查。",
+      "Tespit Edilen Sorunlar ve Çözüm Kodları": "发现的问题与修复代码",
+      "Belirgin sorun yok": "未发现明显问题",
+      "Sistem bu taramada kritik bir sorun tespit etmedi.": "本次扫描未发现严重问题。",
+      "Neden:": "原因：",
+      "Detay:": "详情：",
+      "Önerilen Düzeltme": "建议修复",
+      "Belirgin kritik sorun tespit edilmedi.": "未发现明显严重问题。",
+      "Bozuk link tespit edilmedi.": "未发现损坏链接。",
+      "Başarılı": "成功",
+      "Güçlü": "良好",
+      "Geliştirilmeli": "需要改进",
+      "Var": "存在",
+      "Yok": "缺失",
+      "Başarılı Kontroller": "已通过检查",
+      "Bozuk Linkler": "损坏链接",
+      "Sorunlar ve Çözüm Kodları": "问题与修复代码",
+      "Genel Durum": "总体状态",
+      "Skorlar": "评分",
+      "Temel Veriler": "基础数据",
+      "Doğrulama": "验证",
+      "Title etiketi mevcut.": "已检测到 title 标签。",
+      "Meta description mevcut.": "已检测到 meta description。",
+      "En az bir H1 etiketi mevcut.": "已检测到至少一个 H1 标签。",
+      "Viewport meta etiketi mevcut.": "已检测到 viewport meta 标签。",
+      "Canonical etiketi mevcut.": "已检测到 canonical 标签。",
+      "HTTPS kullanılıyor.": "正在使用 HTTPS。",
+      "robots.txt bulundu.": "已找到 robots.txt。",
+      "sitemap.xml bulundu.": "已找到 sitemap.xml。",
+      "Sıkıştırma aktif.": "已启用压缩。",
+      "Görsellerde alt metin eksikliği tespit edilmedi.": "未发现图片缺少 alt 文本。",
+      "Kontrol edilen bağlantılarda bozuk link bulunmadı.": "已检查的链接中未发现损坏链接。",
+      "Title yok": "缺少 title",
+      "SEO zayıf": "SEO 表现较弱。",
+      "Meta description yok": "缺少 meta description",
+      "Arama sonuçlarında tıklanma oranı düşebilir.": "搜索结果中的点击率可能下降。",
+      "H1 yok": "缺少 H1",
+      "Sayfa ana başlığı eksik.": "页面缺少主标题。",
+      "Viewport yok": "缺少 viewport",
+      "Mobil uyumluluk zayıflar.": "移动端适配会变差。",
+      "Canonical yok": "缺少 canonical",
+      "Kopya içerik sinyali oluşabilir.": "可能产生重复内容信号。",
+      "HTTPS yok": "缺少 HTTPS",
+      "Bağlantı güvenli değil.": "连接不安全。",
+      "Temel güvenlik korumaları zayıf kalır.": "基础安全保护会较弱。",
+      "robots.txt yok": "缺少 robots.txt",
+      "Arama motoru tarama yönlendirmesi eksik olabilir.": "可能缺少搜索引擎爬取指引。",
+      "sitemap.xml yok": "缺少 sitemap.xml",
+      "Arama motorlarının sayfaları keşfetmesi zorlaşabilir.": "搜索引擎可能更难发现页面。",
+      "Sıkıştırma yok": "未启用压缩",
+      "Sayfa daha yavaş yüklenebilir.": "页面加载可能更慢。",
+      "Alt metni eksik görseller var": "存在缺少 alt 文本的图片",
+      "Erişilebilirlik ve görsel SEO zayıflar.": "可访问性和图片 SEO 会变差。",
+      "Bozuk linkler bulundu": "发现损坏链接",
+      "Kullanıcı deneyimi ve crawl kalitesi düşer.": "用户体验和抓取质量会下降。",
+      "Bozuk linkleri güncelle veya kaldır.": "请更新或移除损坏链接。"
+});
+    DEBUGISH_I18N.zh.htmlLang = "zh-CN";
+
+    function t(value) {
+      const key = normalizeDebugishText(value);
+      const lang = getDebugishLang();
+      const pack = DEBUGISH_I18N[lang] || DEBUGISH_I18N.en;
+      if (lang === "tr") return value;
+      return pack.text[key] || DEBUGISH_I18N.en.text[key] || value;
+    }
+
+    function translateTemplateText(value) {
+      let out = t(value);
+      const lang = getDebugishLang();
+      out = out.replace(/Eksik alt metin sayısı:\s*(\d+)/g, (_, n) =>
+        lang === "ru" ? `Количество изображений без alt-текста: ${n}` :
+        lang === "zh" ? `缺少 alt 文本的图片数量：${n}` :
+        `Missing alt text count: ${n}`
+      );
+      out = out.replace(/Bozuk link sayısı:\s*(\d+)/g, (_, n) =>
+        lang === "ru" ? `Количество битых ссылок: ${n}` :
+        lang === "zh" ? `损坏链接数量：${n}` :
+        `Broken link count: ${n}`
+      );
+      return out;
+    }
 
     let latestReport = null;
     let latestVerification = null;
@@ -383,39 +708,39 @@
 
       const data = latestReport;
       const issueText = data.issues.map((issue, i) => `
-${i + 1}. [${issue.severity}] ${issue.title}
-Kategori: ${issue.category}
-Neden: ${issue.why}
-Detay: ${issue.details || '-'}
-Düzeltme Kodu:
+${i + 1}. [${translateTemplateText(issue.severity)}] ${translateTemplateText(issue.title)}
+${t("Kategori")}: ${translateTemplateText(issue.category)}
+${t("Neden:")} ${translateTemplateText(issue.why)}
+${t("Detay:")} ${issue.details ? translateTemplateText(issue.details) : '-'}
+${t("Düzeltme Kodları")}:
 ${issue.fix_code}
       `.trim()).join("\n\n-----------------------------\n\n");
 
-      const passText = (data.passed_checks || []).map((item, i) => `${i + 1}. ${item}`).join("\n");
+      const passText = (data.passed_checks || []).map((item, i) => `${i + 1}. ${translateTemplateText(item)}`).join("\n");
       const brokenText = (data.broken_links || []).length
         ? data.broken_links.map((item, i) => `${i + 1}. ${item.url} -> ${item.status}`).join("\n")
-        : "Bozuk link tespit edilmedi.";
+        : t("Bozuk link tespit edilmedi.");
 
       const reportText = `
-DebugIsh Derin Analiz Raporu
+${reportTitle()}
 ===========================
 
 Domain: ${data.domain}
 URL: ${data.url}
-Doğrulama: Başarılı
+${t("Doğrulama")}: ${t("Başarılı")}
 Status Code: ${data.status_code}
 Response Time: ${data.response_time}s
-Genel Durum: ${data.summary_status}
-Genel Skor: ${data.overall_score}/100
+${t("Genel Durum")}: ${translateTemplateText(data.summary_status)}
+${t("Genel Skor")}: ${data.overall_score}/100
 
-Skorlar
+${t("Skorlar")}
 -------
 SEO: ${data.category_scores.seo}/100
-Güvenlik: ${data.category_scores.security}/100
-Performans: ${data.category_scores.performance}/100
-Teknik: ${data.category_scores.technical}/100
+${t("Güvenlik")}: ${data.category_scores.security}/100
+${t("Performans")}: ${data.category_scores.performance}/100
+${t("Teknik")}: ${data.category_scores.technical}/100
 
-Temel Veriler
+${t("Temel Veriler")}
 -------------
 Title: ${data.title}
 Meta Description: ${data.meta_description}
@@ -423,18 +748,18 @@ H1 Count: ${data.h1_count}
 Link Count: ${data.link_count}
 Image Count: ${data.image_count}
 Missing Alt Text: ${data.images_missing_alt}
-Viewport: ${data.viewport}
+Viewport: ${translateTemplateText(data.viewport)}
 Canonical: ${data.canonical}
-Robots.txt: ${data.robots}
-Sitemap.xml: ${data.sitemap}
-Compression: ${data.compression}
+Robots.txt: ${translateTemplateText(data.robots)}
+Sitemap.xml: ${translateTemplateText(data.sitemap)}
+Compression: ${translateTemplateText(data.compression)}
 Page Size: ${data.page_size_kb} KB
 
-Issue Counts
+${getDebugishLang()==="tr" ? "Sorun Sayıları" : getDebugishLang()==="ru" ? "Количество проблем" : getDebugishLang()==="zh" ? "问题统计" : "Issue Counts"}
 ------------
-Kritik: ${data.issue_counts.critical}
-Orta: ${data.issue_counts.medium}
-Düşük: ${data.issue_counts.low}
+${t("Kritik")}: ${data.issue_counts.critical}
+${t("Orta")}: ${data.issue_counts.medium}
+${t("Düşük")}: ${data.issue_counts.low}
 
 Security Headers
 ----------------
@@ -442,17 +767,17 @@ ${Object.entries(data.security_headers)
   .map(([key, value]) => `${key}: ${value}`)
   .join("\n")}
 
-Başarılı Kontroller
+${t("Başarılı Kontroller")}
 -------------------
-${passText || 'Belirgin başarılı kontrol yok.'}
+${passText || t("Belirgin geçilen kontrol listelenmedi.")}
 
-Bozuk Linkler
+${t("Bozuk Linkler")}
 -------------
 ${brokenText}
 
-Sorunlar ve Çözüm Kodları
+${t("Sorunlar ve Çözüm Kodları")}
 -------------------------
-${issueText || 'Belirgin kritik sorun tespit edilmedi.'}
+${issueText || t("Belirgin kritik sorun tespit edilmedi.")}
 `;
 
       const blob = new Blob([reportText], { type: "text/plain;charset=utf-8" });
@@ -472,7 +797,7 @@ ${issueText || 'Belirgin kritik sorun tespit edilmedi.'}
     }
 
     function setScanText(text) {
-      document.getElementById("scanText").textContent = text;
+      document.getElementById("scanText").textContent = t(text);
     }
 
     function setLoadingState(isLoading) {
@@ -486,7 +811,7 @@ ${issueText || 'Belirgin kritik sorun tespit edilmedi.'}
         btn.disabled = true;
         generateBtn.disabled = true;
         if (verifyBtn) verifyBtn.disabled = true;
-        btn.textContent = "Taranıyor...";
+        btn.textContent = t("Taranıyor...");
         progressWrap.classList.remove("hidden");
         scanStatus.classList.remove("idle");
         scanStatus.classList.add("scanning");
@@ -494,7 +819,7 @@ ${issueText || 'Belirgin kritik sorun tespit edilmedi.'}
         btn.disabled = !isVerified;
         generateBtn.disabled = false;
         if (verifyBtn) verifyBtn.disabled = false;
-        btn.textContent = "Taramayı Başlat";
+        btn.textContent = t("Taramayı Başlat");
         scanStatus.classList.remove("scanning");
         scanStatus.classList.add("idle");
       }
@@ -632,12 +957,12 @@ ${issueText || 'Belirgin kritik sorun tespit edilmedi.'}
       return `
         <div class="issue-card severity-${issue.severity.toLowerCase()}">
           <div class="issue-head">
-            <span class="issue-badge">${escapeHtml(issue.severity)}</span>
-            <span class="issue-category">${escapeHtml(issue.category)}</span>
+            <span class="issue-badge">${escapeHtml(translateTemplateText(issue.severity))}</span>
+            <span class="issue-category">${escapeHtml(translateTemplateText(issue.category))}</span>
           </div>
-          <h4>${escapeHtml(issue.title)}</h4>
-          <p><strong>Neden:</strong> ${escapeHtml(issue.why)}</p>
-          ${issue.details ? `<p><strong>Detay:</strong> ${escapeHtml(issue.details)}</p>` : ""}
+          <h4>${escapeHtml(translateTemplateText(issue.title))}</h4>
+          <p><strong>Neden:</strong> ${escapeHtml(translateTemplateText(issue.why))}</p>
+          ${issue.details ? `<p><strong>Detay:</strong> ${escapeHtml(translateTemplateText(issue.details))}</p>` : ""}
           <div class="code-block-wrap">
             <div class="code-title">Önerilen Düzeltme</div>
             <pre class="code-block"><code>${escapeHtml(issue.fix_code)}</code></pre>
@@ -728,7 +1053,7 @@ ${issueText || 'Belirgin kritik sorun tespit edilmedi.'}
         latestReport = data;
         downloadReport();
 
-        const passedHtml = (data.passed_checks || []).slice(0, 8).map(item => `<li>${escapeHtml(item)}</li>`).join("");
+        const passedHtml = (data.passed_checks || []).slice(0, 8).map(item => `<li>${escapeHtml(translateTemplateText(item))}</li>`).join("");
         const issuesHtml = data.issues.length
           ? data.issues.map(renderIssue).join("")
           : `<div class="result-empty"><h3>Belirgin sorun yok</h3><p>Sistem bu taramada kritik bir sorun tespit etmedi.</p></div>`;
@@ -737,7 +1062,7 @@ ${issueText || 'Belirgin kritik sorun tespit edilmedi.'}
           <div class="result-summary deep-result">
             <div class="summary-top">
               <span class="summary-badge">Analiz Tamamlandı</span>
-              <span class="summary-state">${escapeHtml(data.summary_status)}</span>
+              <span class="summary-state">${escapeHtml(translateTemplateText(data.summary_status))}</span>
             </div>
 
             <div class="summary-grid">
@@ -767,9 +1092,9 @@ ${issueText || 'Belirgin kritik sorun tespit edilmedi.'}
             </div>
 
             <div class="issue-count-bar">
-              <span>Kritik: ${data.issue_counts.critical}</span>
-              <span>Orta: ${data.issue_counts.medium}</span>
-              <span>Düşük: ${data.issue_counts.low}</span>
+              <span>${t("Kritik")}: ${data.issue_counts.critical}</span>
+              <span>${t("Orta")}: ${data.issue_counts.medium}</span>
+              <span>${t("Düşük")}: ${data.issue_counts.low}</span>
               <span>Bozuk Link: ${(data.broken_links || []).length}</span>
             </div>
 
