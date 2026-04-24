@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DebugIsh</title>
+  <link rel="icon" type="image/png" href="/static/favicon.png">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5794493544482249"
+     crossorigin="anonymous"></script>
+<meta name="google-site-verification" content="VyG9DunQc8D35X8lPIJC3AfLp9j6ruZNfazbJagwIbk" />
+</head>
+<body>
+
+  <header class="top-header">
+    <div class="language-switcher">
+      <span class="language-icon">🌐</span>
+      <select id="languageSelect" aria-label="Language selector">
+        <option value="en">English</option>
+        <option value="tr">Türkçe</option>
+        <option value="ru">Русский</option>
+        <option value="zh">中文</option>
+      </select>
+    </div>
+    <div class="logo">
+      <img src="{{ url_for('static', filename='logo.png') }}" alt="DebugIsh Logo" />
+    </div>
+  </header>
+
+  <main>
+    <section class="hero-center">
+      <div class="hero-badge">Smart Website Scanner</div>
+      <h1>Web Sitenizin Zayıf Noktalarını Bulun</h1>
+      <p class="hero-subtext">
+        DebugIsh, web sitelerini hız, yapı ve temel teknik sağlık açısından tarar.
+        Artık önce sahipliği doğrular, sonra derin analiz yapar ve düzeltme kodlarını rapora koyar.
+      </p>
+
+      <div class="analyze-panel">
+        <div class="analyze-box">
+          <input type="text" id="urlInput" placeholder="örn: example.com veya https://site.com" />
+          <button id="generateBtn" onclick="generateCode()">Kodu Oluştur</button>
+          <button id="analyzeBtn" onclick="analyzeSite()" disabled>Taramayı Başlat</button>
+        </div>
+
+        <div id="scanStatus" class="scan-status idle">
+          <span class="status-dot"></span>
+          <span id="scanText">Hazır. Önce domain gir, kodu oluştur, sitene ekle ve doğrula.</span>
+        </div>
+
+        <div id="progressWrap" class="progress-wrap hidden">
+          <div class="progress-bar">
+            <div id="progressFill" class="progress-fill"></div>
+          </div>
+        </div>
+
+        <div id="verificationPanel" class="verification-panel hidden">
+          <div class="verify-head">
+            <span class="summary-badge">1. Adım: Sahiplik Doğrulama</span>
+            <span id="verifyDomainLabel" class="verify-domain"></span>
+          </div>
+
+          <div class="verify-grid">
+            <div class="verify-card">
+              <h3>Meta Tag Yöntemi</h3>
+              <p>Bu kodu sitenin <code>&lt;head&gt;</code> alanına ekle.</p>
+              <textarea id="metaTagOutput" readonly></textarea>
+              <button class="mini-btn" onclick="copyField('metaTagOutput')">Meta Kodu Kopyala</button>
+            </div>
+
+            <div class="verify-card">
+              <h3>TXT Yöntemi</h3>
+              <p><code>debugish-verification.txt</code> dosyası oluştur ve içine bu kodu yaz.</p>
+              <textarea id="txtCodeOutput" readonly></textarea>
+              <button class="mini-btn" onclick="copyField('txtCodeOutput')">TXT Kodu Kopyala</button>
+            </div>
+          </div>
+
+          <div class="verify-actions">
+            <button id="verifyBtn" class="verify-btn" onclick="verifyDomain()">Doğrulamayı Kontrol Et</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="result-section">
+      <div id="resultBox" class="result-box">
+        <div class="result-empty">
+          <h3>Henüz analiz yapılmadı</h3>
+          <p>Doğrulama tamamlandığında derin rapor burada görünecek.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="stats-bar">
+      <div class="stat-box">
+        <h2>1K+</h2>
+        <p>Test Edilen Site</p>
+      </div>
+      <div class="stat-box">
+        <h2>4</h2>
+        <p>Kategori</p>
+      </div>
+      <div class="stat-box">
+        <h2>1s</h2>
+        <p>Hızlı Tarama</p>
+      </div>
+      <div class="stat-box">
+        <h2>Anlık</h2>
+        <p>Analiz</p>
+      </div>
+    </section>
+
+    <section class="services">
+      <h2>Neleri Analiz Ediyoruz</h2>
+      <div class="service-grid">
+        <div class="service-box">
+          <h3>Performans</h3>
+          <p>Yanıt süresi, sıkıştırma ve sayfa ağırlığını ölçer.</p>
+        </div>
+        <div class="service-box">
+          <h3>SEO Sinyalleri</h3>
+          <p>Title, meta description, canonical, robots ve sitemap kontrol eder.</p>
+        </div>
+        <div class="service-box">
+          <h3>Güvenlik</h3>
+          <p>Temel güvenlik headerlarını ve HTTPS durumunu inceler.</p>
+        </div>
+        <div class="service-box">
+          <h3>Derin Rapor</h3>
+          <p>Sorunları nedenleri ve düzeltme kodlarıyla birlikte verir.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="why">
+      <h2>Neden DebugIsh</h2>
+      <div class="why-grid">
+        <div class="why-box">
+          <h3>Sahiplik Doğrulama</h3>
+          <p>Analiz herkese açık değil, önce domain sahibi olduğunu kanıtlarsın.</p>
+        </div>
+        <div class="why-box">
+          <h3>İndirilebilir Rapor</h3>
+          <p>Detaylı hata ve düzeltme raporu otomatik olarak .txt dosyası halinde iner.</p>
+        </div>
+        <div class="why-box">
+          <h3>Gerçek Veri</h3>
+          <p>Analizler doğrudan site response verisine dayanır.</p>
+        </div>
+        <div class="why-box">
+          <h3>Düzeltme Kodları</h3>
+          <p>Sorunları sadece söylemez, uygulanabilir örnek kod da verir.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="about">
+      <h2>Biz Kimiz</h2>
+      <p>
+        DebugIsh, web sitelerini anlaşılır teknik sinyallerle analiz eden modern bir araçtır. Karmaşık raporlar yerine net sorunlar, doğrulanmış sahiplik ve uygulanabilir düzeltme önerileri sunar.
+        Amaç, karmaşık raporlar yerine anlaşılır sinyaller, doğrulanmış sahiplik ve indirilebilir teknik çözüm özetleri sunmaktır.
+      </p>
+    </section>
+  </main>
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-5794493544482249"
+     data-ad-slot="1234567890"
+     data-ad-format="auto"></ins>
+
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+  <footer class="footer">
+    DebugIsh © 2026
+  </footer>
+
+  <script>
+
+    const DEBUGISH_I18N = {
+      en: {
+        htmlLang: "en",
+        placeholder: "e.g. example.com or https://site.com",
+        text: {
+          "Web Sitenizin Zayıf Noktalarını Bulun": "Find Your Website's Weak Spots",
+          "DebugIsh, web sitelerini hız, yapı ve temel teknik sağlık açısından tarar. Artık önce sahipliği doğrular, sonra derin analiz yapar ve düzeltme kodlarını rapora koyar.": "DebugIsh scans websites for speed, structure and basic technical health. It verifies ownership first, then runs deep analysis and adds fix codes to the report.",
+          "Kodu Oluştur": "Generate Code",
+          "Taramayı Başlat": "Start Scan",
+          "Taranıyor...": "Scanning...",
+          "Hazır. Önce domain gir, kodu oluştur, sitene ekle ve doğrula.": "Ready. Enter a domain, generate the code, add it to your site and verify it.",
+          "1. Adım: Sahiplik Doğrulama": "Step 1: Ownership Verification",
+          "Meta Tag Yöntemi": "Meta Tag Method",
+          "Meta Kodu Kopyala": "Copy Meta Code",
+          "TXT Yöntemi": "TXT Method",
+          "TXT Kodu Kopyala": "Copy TXT Code",
+          "Doğrulamayı Kontrol Et": "Check Verification",
+          "Henüz analiz yapılmadı": "No analysis yet",
+          "Doğrulama tamamlandığında derin rapor burada görünecek.": "The deep report will appear here after verification is completed.",
+          "Test Edilen Site": "Tested Sites",
+          "Kategori": "Category",
+          "Hızlı Tarama": "Fast Scan",
+          "Analiz": "Analysis",
+          "Neleri Analiz Ediyoruz": "What We Analyze",
+          "Performans": "Performance",
+          "Yanıt süresi, sıkıştırma ve sayfa ağırlığını ölçer.": "Measures response time, compression and page weight.",
+          "SEO Sinyalleri": "SEO Signals",
+          "Title, meta description, canonical, robots ve sitemap kontrol eder.": "Checks title, meta description, canonical, robots and sitemap.",
+          "Güvenlik": "Security",
+          "Temel güvenlik headerlarını ve HTTPS durumunu inceler.": "Reviews basic security headers and HTTPS status.",
+          "Derin Rapor": "Deep Report",
+          "Sorunları nedenleri ve düzeltme kodlarıyla birlikte verir.": "Shows issues with reasons and fix code examples.",
+          "Neden DebugIsh": "Why DebugIsh",
+          "Sahiplik Doğrulama": "Ownership Verification",
+          "Analiz herkese açık değil, önce domain sahibi olduğunu kanıtlarsın.": "Analysis is not public to everyone. You prove domain ownership first.",
+          "İndirilebilir Rapor": "Downloadable Report",
+          "Detaylı hata ve düzeltme raporu otomatik olarak .txt dosyası halinde iner.": "Detailed issue and fix report downloads automatically as a .txt file.",
+          "Gerçek Veri": "Real Data",
+          "Analizler doğrudan site response verisine dayanır.": "Analysis is based directly on site response data.",
+          "Düzeltme Kodları": "Fix Codes",
+          "Sorunları sadece söylemez, uygulanabilir örnek kod da verir.": "It does not only report problems, it gives usable example code.",
+          "Biz Kimiz": "Who We Are",
+          "URL gerekli": "URL required",
+          "Lütfen geçerli bir site adresi gir.": "Please enter a valid website address.",
+          "Doğrulama kodu oluşturuluyor...": "Generating verification code...",
+          "Kod oluşturulamadı": "Code could not be generated",
+          "Bilinmeyen hata": "Unknown error",
+          "Beklenmeyen hata": "Unexpected error",
+          "Kod oluşturulurken bir sorun oluştu.": "Something went wrong while generating the code.",
+          "Kod hazır. Şimdi bunu sitene ekleyip doğrulamayı kontrol et.": "Code ready. Add it to your site and check verification.",
+          "Doğrulama Kodu Hazır": "Verification Code Ready",
+          "Sıradaki iş: kodu siteye eklemek": "Next: add the code to your site",
+          "Domain sahipliği kontrol ediliyor...": "Checking domain ownership...",
+          "Doğrulama başarısız": "Verification failed",
+          "Doğrulama Başarılı": "Verification Successful",
+          "Tarama hazırlanıyor": "Preparing scan",
+          "Tarama başlatılıyor...": "Starting scan...",
+          "Tarama tamamlandı. Detaylı rapor indiriliyor.": "Scan completed. Detailed report is downloading.",
+          "Analiz Tamamlandı": "Analysis Completed",
+          "Genel Skor": "Overall Score",
+          "Sorun Sayısı": "Issue Count",
+          "Raporu Tekrar İndir": "Download Report Again",
+          "Geçilen Kontroller": "Passed Checks",
+          "Tespit Edilen Sorunlar ve Çözüm Kodları": "Detected Issues and Fix Codes",
+          "Önerilen Düzeltme": "Suggested Fix"
+        }
+      },
+      tr: { htmlLang: "tr", placeholder: "örn: example.com veya https://site.com", text: {} },
+      ru: { htmlLang: "ru", placeholder: "например: example.com или https://site.com", text: {} },
+      zh: { htmlLang: "zh", placeholder: "例如：example.com 或 https://site.com", text: {} }
+    };
+
+    DEBUGISH_I18N.ru.text = Object.assign({}, DEBUGISH_I18N.en.text, {
+      "Web Sitenizin Zayıf Noktalarını Bulun": "Найдите слабые места вашего сайта",
+      "Kodu Oluştur": "Создать код",
+      "Taramayı Başlat": "Начать сканирование",
+      "Taranıyor...": "Сканирование...",
+      "Henüz analiz yapılmadı": "Анализа пока нет",
+      "Doğrulamayı Kontrol Et": "Проверить",
+      "Neleri Analiz Ediyoruz": "Что мы анализируем",
+      "Neden DebugIsh": "Почему DebugIsh",
+      "Biz Kimiz": "Кто мы",
+      "Analiz Tamamlandı": "Анализ завершен",
+      "Raporu Tekrar İndir": "Скачать отчет снова"
+    });
+
+    DEBUGISH_I18N.zh.text = Object.assign({}, DEBUGISH_I18N.en.text, {
+      "Web Sitenizin Zayıf Noktalarını Bulun": "找出网站的薄弱点",
+      "Kodu Oluştur": "生成代码",
+      "Taramayı Başlat": "开始扫描",
+      "Taranıyor...": "扫描中...",
+      "Henüz analiz yapılmadı": "还没有分析",
+      "Doğrulamayı Kontrol Et": "检查验证",
+      "Neleri Analiz Ediyoruz": "我们分析什么",
+      "Neden DebugIsh": "为什么选择 DebugIsh",
+      "Biz Kimiz": "关于我们",
+      "Analiz Tamamlandı": "分析完成",
+      "Raporu Tekrar İndir": "再次下载报告"
+    });
+
+    function getDebugishLang() {
+      return localStorage.getItem("debugish_lang") || "en";
+    }
+
+    function normalizeDebugishText(value) {
+      return String(value || "").replace(/\s+/g, " ").trim();
+    }
+
+    function applyDebugishLanguage() {
+      const lang = getDebugishLang();
+      const pack = DEBUGISH_I18N[lang] || DEBUGISH_I18N.en;
+      document.documentElement.lang = pack.htmlLang;
+
+      const select = document.getElementById("languageSelect");
+      if (select) select.value = lang;
+
+      const urlInput = document.getElementById("urlInput");
+      if (urlInput) urlInput.placeholder = pack.placeholder;
+
+      if (lang === "tr") return;
+
+      const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+        acceptNode(node) {
+          const parent = node.parentElement;
+          if (!parent || ["SCRIPT", "STYLE", "TEXTAREA", "CODE", "PRE"].includes(parent.tagName)) {
+            return NodeFilter.FILTER_REJECT;
+          }
+          return normalizeDebugishText(node.nodeValue) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+        }
+      });
+
+      const nodes = [];
+      while (walker.nextNode()) nodes.push(walker.currentNode);
+
+      nodes.forEach(node => {
+        const key = normalizeDebugishText(node.nodeValue);
+        if (pack.text[key]) {
+          node.nodeValue = node.nodeValue.replace(node.nodeValue.trim(), pack.text[key]);
+        }
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const select = document.getElementById("languageSelect");
+      if (select) {
+        select.value = getDebugishLang();
+        select.addEventListener("change", () => {
+          localStorage.setItem("debugish_lang", select.value);
+          window.location.reload();
+        });
+      }
+
+      applyDebugishLanguage();
+
+      const observer = new MutationObserver(() => applyDebugishLanguage());
+      observer.observe(document.body, { childList: true, subtree: true });
+    });
+
+    let latestReport = null;
+    let latestVerification = null;
+    let isVerified = false;
+
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    function sanitizeFilename(name) {
+      return name.replace(/[^a-zA-Z0-9.-]/g, "-");
+    }
+
+    function escapeHtml(text) {
+      return String(text || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function copyField(id) {
+      const field = document.getElementById(id);
+      field.select();
+      field.setSelectionRange(0, 99999);
+      document.execCommand("copy");
+    }
+
+    function normalizeInputUrl(value) {
+      value = String(value || "").trim();
+      if (!value) return "";
+      value = value.replace(/^https?:\/\//i, "");
+      value = value.replace(/^www\./i, "");
+      value = value.replace(/\/+$/, "");
+      return value;
+    }
+
+    function getCurrentInputUrl() {
+      const raw = document.getElementById("urlInput").value.trim();
+      return normalizeInputUrl(raw);
+    }
+
+    function downloadReport() {
+      if (!latestReport) return;
+
+      const data = latestReport;
+      const issueText = data.issues.map((issue, i) => `
+${i + 1}. [${issue.severity}] ${issue.title}
+Kategori: ${issue.category}
+Neden: ${issue.why}
+Detay: ${issue.details || '-'}
+Düzeltme Kodu:
+${issue.fix_code}
+      `.trim()).join("\n\n-----------------------------\n\n");
+
+      const passText = (data.passed_checks || []).map((item, i) => `${i + 1}. ${item}`).join("\n");
+      const brokenText = (data.broken_links || []).length
+        ? data.broken_links.map((item, i) => `${i + 1}. ${item.url} -> ${item.status}`).join("\n")
+        : "Bozuk link tespit edilmedi.";
+
+      const reportText = `
+DebugIsh Derin Analiz Raporu
+===========================
+
+Domain: ${data.domain}
+URL: ${data.url}
+Doğrulama: Başarılı
+Status Code: ${data.status_code}
+Response Time: ${data.response_time}s
+Genel Durum: ${data.summary_status}
+Genel Skor: ${data.overall_score}/100
+
+Skorlar
+-------
+SEO: ${data.category_scores.seo}/100
+Güvenlik: ${data.category_scores.security}/100
+Performans: ${data.category_scores.performance}/100
+Teknik: ${data.category_scores.technical}/100
+
+Temel Veriler
+-------------
+Title: ${data.title}
+Meta Description: ${data.meta_description}
+H1 Count: ${data.h1_count}
+Link Count: ${data.link_count}
+Image Count: ${data.image_count}
+Missing Alt Text: ${data.images_missing_alt}
+Viewport: ${data.viewport}
+Canonical: ${data.canonical}
+Robots.txt: ${data.robots}
+Sitemap.xml: ${data.sitemap}
+Compression: ${data.compression}
+Page Size: ${data.page_size_kb} KB
+
+Issue Counts
+------------
+Kritik: ${data.issue_counts.critical}
+Orta: ${data.issue_counts.medium}
+Düşük: ${data.issue_counts.low}
+
+Security Headers
+----------------
+${Object.entries(data.security_headers)
+  .map(([key, value]) => `${key}: ${value}`)
+  .join("\n")}
+
+Başarılı Kontroller
+-------------------
+${passText || 'Belirgin başarılı kontrol yok.'}
+
+Bozuk Linkler
+-------------
+${brokenText}
+
+Sorunlar ve Çözüm Kodları
+-------------------------
+${issueText || 'Belirgin kritik sorun tespit edilmedi.'}
+`;
+
+      const blob = new Blob([reportText], { type: "text/plain;charset=utf-8" });
+      const blobUrl = window.URL.createObjectURL(blob);
+
+      const a = document.createElement("a");
+      a.href = blobUrl;
+      a.download = `debugish-report-${sanitizeFilename(data.domain)}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(blobUrl);
+    }
+
+    function setProgress(percent) {
+      document.getElementById("progressFill").style.width = percent + "%";
+    }
+
+    function setScanText(text) {
+      document.getElementById("scanText").textContent = text;
+    }
+
+    function setLoadingState(isLoading) {
+      const btn = document.getElementById("analyzeBtn");
+      const generateBtn = document.getElementById("generateBtn");
+      const verifyBtn = document.getElementById("verifyBtn");
+      const progressWrap = document.getElementById("progressWrap");
+      const scanStatus = document.getElementById("scanStatus");
+
+      if (isLoading) {
+        btn.disabled = true;
+        generateBtn.disabled = true;
+        if (verifyBtn) verifyBtn.disabled = true;
+        btn.textContent = "Taranıyor...";
+        progressWrap.classList.remove("hidden");
+        scanStatus.classList.remove("idle");
+        scanStatus.classList.add("scanning");
+      } else {
+        btn.disabled = !isVerified;
+        generateBtn.disabled = false;
+        if (verifyBtn) verifyBtn.disabled = false;
+        btn.textContent = "Taramayı Başlat";
+        scanStatus.classList.remove("scanning");
+        scanStatus.classList.add("idle");
+      }
+    }
+
+    async function generateCode() {
+      const cleanUrl = getCurrentInputUrl();
+      const resultBox = document.getElementById("resultBox");
+      const verificationPanel = document.getElementById("verificationPanel");
+
+      if (!cleanUrl) {
+        resultBox.innerHTML = `
+          <div class="result-empty">
+            <h3>URL gerekli</h3>
+            <p>Lütfen geçerli bir site adresi gir.</p>
+          </div>
+        `;
+        return;
+      }
+
+      try {
+        setScanText("Doğrulama kodu oluşturuluyor...");
+        const response = await fetch("/generate-code", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ url: cleanUrl })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok || data.error) {
+          resultBox.innerHTML = `
+            <div class="result-error">
+              <h3>Kod oluşturulamadı</h3>
+              <p>${escapeHtml(data.error || "Bilinmeyen hata")}</p>
+            </div>
+          `;
+          return;
+        }
+
+        latestVerification = data;
+        isVerified = false;
+        document.getElementById("analyzeBtn").disabled = true;
+        document.getElementById("verifyDomainLabel").textContent = data.domain;
+        document.getElementById("metaTagOutput").value = data.meta_tag;
+        document.getElementById("txtCodeOutput").value = data.txt_content || data.code;
+        verificationPanel.classList.remove("hidden");
+        setScanText("Kod hazır. Şimdi bunu sitene ekleyip doğrulamayı kontrol et.");
+
+        resultBox.innerHTML = `
+          <div class="result-summary">
+            <div class="summary-top">
+              <span class="summary-badge">Doğrulama Kodu Hazır</span>
+              <span class="summary-state">Sıradaki iş: kodu siteye eklemek</span>
+            </div>
+            <div class="download-note">
+              Domain sahibi doğrulaması olmadan analiz başlamaz. Meta tag veya TXT kodunu sitene koy, sonra doğrula.
+            </div>
+          </div>
+        `;
+      } catch (error) {
+        resultBox.innerHTML = `
+          <div class="result-error">
+            <h3>Beklenmeyen hata</h3>
+            <p>Kod oluşturulurken bir sorun oluştu.</p>
+          </div>
+        `;
+      }
+    }
+
+    async function verifyDomain() {
+      const resultBox = document.getElementById("resultBox");
+      const verifyUrl = (latestVerification && latestVerification.url)
+        ? latestVerification.url
+        : getCurrentInputUrl();
+
+      if (!verifyUrl) {
+        resultBox.innerHTML = `
+          <div class="result-error">
+            <h3>URL gerekli</h3>
+            <p>Önce geçerli bir domain gir.</p>
+          </div>
+        `;
+        return;
+      }
+
+      try {
+        setScanText("Domain sahipliği kontrol ediliyor...");
+        const response = await fetch("/verify-domain", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ url: verifyUrl })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok || data.error) {
+          isVerified = false;
+          document.getElementById("analyzeBtn").disabled = true;
+          resultBox.innerHTML = `
+            <div class="result-error">
+              <h3>Doğrulama başarısız</h3>
+              <p>${escapeHtml(data.error || "Doğrulama başarısız")}</p>
+            </div>
+          `;
+          setScanText("Kod bulunamadı. Eklemeyi kontrol et ve tekrar dene.");
+          return;
+        }
+
+        isVerified = true;
+        document.getElementById("analyzeBtn").disabled = false;
+        resultBox.innerHTML = `
+          <div class="result-summary">
+            <div class="summary-top">
+              <span class="summary-badge">Doğrulama Başarılı</span>
+              <span class="summary-state">Yöntem: ${escapeHtml(data.method || "Doğrulandı")}</span>
+            </div>
+            <div class="download-note">
+              Domain doğrulandı. Şimdi taramayı başlat, sistem sorunları ve çözüm kodlarını önüne koysun.
+            </div>
+          </div>
+        `;
+        setScanText("Doğrulama başarılı. Derin analiz başlatılabilir.");
+      } catch (error) {
+        resultBox.innerHTML = `
+          <div class="result-error">
+            <h3>Beklenmeyen hata</h3>
+            <p>Doğrulama sırasında bir sorun oluştu.</p>
+          </div>
+        `;
+      }
+    }
+
+    function renderIssue(issue) {
+      return `
+        <div class="issue-card severity-${issue.severity.toLowerCase()}">
+          <div class="issue-head">
+            <span class="issue-badge">${escapeHtml(issue.severity)}</span>
+            <span class="issue-category">${escapeHtml(issue.category)}</span>
+          </div>
+          <h4>${escapeHtml(issue.title)}</h4>
+          <p><strong>Neden:</strong> ${escapeHtml(issue.why)}</p>
+          ${issue.details ? `<p><strong>Detay:</strong> ${escapeHtml(issue.details)}</p>` : ""}
+          <div class="code-block-wrap">
+            <div class="code-title">Önerilen Düzeltme</div>
+            <pre class="code-block"><code>${escapeHtml(issue.fix_code)}</code></pre>
+          </div>
+        </div>
+      `;
+    }
+
+    async function analyzeSite() {
+      const url = getCurrentInputUrl();
+      const resultBox = document.getElementById("resultBox");
+
+      if (!url) {
+        resultBox.innerHTML = `
+          <div class="result-empty">
+            <h3>URL gerekli</h3>
+            <p>Lütfen geçerli bir site adresi gir.</p>
+          </div>
+        `;
+        return;
+      }
+
+      if (!isVerified) {
+        resultBox.innerHTML = `
+          <div class="result-error">
+            <h3>Doğrulama gerekli</h3>
+            <p>Önce domain sahipliğini doğrula, sonra derin analizi başlat.</p>
+          </div>
+        `;
+        return;
+      }
+
+      latestReport = null;
+      setLoadingState(true);
+      setProgress(8);
+      setScanText("Tarama başlatılıyor...");
+      resultBox.innerHTML = `
+        <div class="result-empty">
+          <h3>Tarama hazırlanıyor</h3>
+          <p>Lütfen bekle. Sistem siteyi katman katman inceliyor.</p>
+        </div>
+      `;
+
+      try {
+        await sleep(800);
+        setProgress(18);
+        setScanText("Yanıt süresi ve erişim kontrol ediliyor...");
+
+        await sleep(900);
+        setProgress(34);
+        setScanText("SEO ve yapısal sinyaller taranıyor...");
+
+        await sleep(900);
+        setProgress(52);
+        setScanText("Güvenlik başlıkları analiz ediliyor...");
+
+        await sleep(900);
+        setProgress(70);
+        setScanText("Linkler, medya ve teknik hatalar kontrol ediliyor...");
+
+        const response = await fetch("/analyze", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ url })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok || data.error) {
+          setProgress(100);
+          setScanText("Tarama tamamlanamadı.");
+          resultBox.innerHTML = `
+            <div class="result-error">
+              <h3>Tarama başarısız</h3>
+              <p>${escapeHtml(data.error || "Bilinmeyen hata")}</p>
+            </div>
+          `;
+          setLoadingState(false);
+          return;
+        }
+
+        await sleep(800);
+        setProgress(100);
+        setScanText("Tarama tamamlandı. Detaylı rapor indiriliyor.");
+
+        latestReport = data;
+        downloadReport();
+
+        const passedHtml = (data.passed_checks || []).slice(0, 8).map(item => `<li>${escapeHtml(item)}</li>`).join("");
+        const issuesHtml = data.issues.length
+          ? data.issues.map(renderIssue).join("")
+          : `<div class="result-empty"><h3>Belirgin sorun yok</h3><p>Sistem bu taramada kritik bir sorun tespit etmedi.</p></div>`;
+
+        resultBox.innerHTML = `
+          <div class="result-summary deep-result">
+            <div class="summary-top">
+              <span class="summary-badge">Analiz Tamamlandı</span>
+              <span class="summary-state">${escapeHtml(data.summary_status)}</span>
+            </div>
+
+            <div class="summary-grid">
+              <div class="summary-item">
+                <span class="summary-label">Domain</span>
+                <span class="summary-value">${escapeHtml(data.domain)}</span>
+              </div>
+              <div class="summary-item">
+                <span class="summary-label">Genel Skor</span>
+                <span class="summary-value">${data.overall_score}/100</span>
+              </div>
+              <div class="summary-item">
+                <span class="summary-label">Response Time</span>
+                <span class="summary-value">${data.response_time}s</span>
+              </div>
+              <div class="summary-item">
+                <span class="summary-label">Sorun Sayısı</span>
+                <span class="summary-value">${data.issues.length}</span>
+              </div>
+            </div>
+
+            <div class="score-grid">
+              <div class="summary-item"><span class="summary-label">SEO</span><span class="summary-value">${data.category_scores.seo}/100</span></div>
+              <div class="summary-item"><span class="summary-label">Güvenlik</span><span class="summary-value">${data.category_scores.security}/100</span></div>
+              <div class="summary-item"><span class="summary-label">Performans</span><span class="summary-value">${data.category_scores.performance}/100</span></div>
+              <div class="summary-item"><span class="summary-label">Teknik</span><span class="summary-value">${data.category_scores.technical}/100</span></div>
+            </div>
+
+            <div class="issue-count-bar">
+              <span>Kritik: ${data.issue_counts.critical}</span>
+              <span>Orta: ${data.issue_counts.medium}</span>
+              <span>Düşük: ${data.issue_counts.low}</span>
+              <span>Bozuk Link: ${(data.broken_links || []).length}</span>
+            </div>
+
+            <div class="download-note">
+              Tarama yapıldı. Hatalar, nedenleri ve düzeltme kodları .txt rapor olarak otomatik indirildi.
+            </div>
+
+            <button class="download-btn" onclick="downloadReport()">Raporu Tekrar İndir</button>
+
+            <div class="passed-box">
+              <h3>Geçilen Kontroller</h3>
+              <ul>${passedHtml || '<li>Belirgin geçilen kontrol listelenmedi.</li>'}</ul>
+            </div>
+
+            <div class="issues-wrap">
+              <h3>Tespit Edilen Sorunlar ve Çözüm Kodları</h3>
+              <div class="issues-grid">${issuesHtml}</div>
+            </div>
+          </div>
+        `;
+
+        setLoadingState(false);
+
+      } catch (error) {
+        setProgress(100);
+        setScanText("Bir hata oluştu.");
+        resultBox.innerHTML = `
+          <div class="result-error">
+            <h3>Beklenmeyen hata</h3>
+            <p>Tarama sırasında bir sorun oluştu.</p>
+          </div>
+        `;
+        setLoadingState(false);
+      }
+    }
+  </script>
+
+</body>
+</html>
